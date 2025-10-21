@@ -28,19 +28,15 @@ export class TasksService {
   }
 
   async findOne(id: number) {
-    try {
-      const task = await this.prisma.task.findFirst({
-        where: { id }
-      })
 
-      if (task?.id) return task;
+    const task = await this.prisma.task.findFirst({
+      where: { id }
+    })
 
-      throw new HttpException("Essa tarefa não existe!", HttpStatus.NOT_FOUND);
-      //throw new NotFoundException("Essa tarefa não existe!");
-    } catch (err) {
-      throw new HttpException("Erro ao buscar a tarefa!", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    if (task?.id) return task;
 
+    throw new HttpException("Essa tarefa não existe!", HttpStatus.NOT_FOUND);
+    //throw new NotFoundException("Essa tarefa não existe!");
   }
 
   async create(createTaskDto: CreateTaskDto) {
