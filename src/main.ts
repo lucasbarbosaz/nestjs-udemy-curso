@@ -11,7 +11,10 @@ src/app.service.ts: Contém a lógica de negocio, separado do controller.
 // Arquivo que inicia nosso projeto NestJS
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, // se TRUE, remove propriedades não definidas no DTO
+    transform: true, // transforma os tipos primitivos automaticamente
+  }))
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
