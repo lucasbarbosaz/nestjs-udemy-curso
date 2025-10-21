@@ -4,15 +4,17 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { LoggerInterceptor } from 'src/common/interceptors/logger.interceptor';
+import { BodyCreateTaskInterceptor } from 'src/common/interceptors/body-create-task.interceptor';
+import { AddHeaderInterceptor } from 'src/common/interceptors/add-header.interceptor';
 
 @Controller('tasks')
-@UseInterceptors(LoggerInterceptor) //isso serve para todas as rotas desse controller
+//@UseInterceptors(LoggerInterceptor) //isso serve para todas as rotas desse controller
 export class TasksController {
   constructor(private readonly tasksService: TasksService) { }
 
   @Get()
-  //@UseInterceptors(LoggerInterceptor) //isso serve apenas para essa rota
-  // @Query('limit') limit: string
+  @UseInterceptors(LoggerInterceptor) //isso serve apenas para essa rota
+  @UseInterceptors(AddHeaderInterceptor) //isso serve apenas para essa rota
   findAllTasks(@Query() paginationDto: PaginationDto) {
     return this.tasksService.findAll(paginationDto);
   }
@@ -23,8 +25,8 @@ export class TasksController {
   }
 
   @Post("")
+  @UseInterceptors(BodyCreateTaskInterceptor)
   createTask(@Body() createTaskDto: CreateTaskDto) {
-    console.log(createTaskDto);
     return this.tasksService.create(createTaskDto);
   }
 

@@ -1,6 +1,7 @@
-import { ExecutionContext, NestInterceptor, CallHandler } from "@nestjs/common";
+import { ExecutionContext, NestInterceptor, CallHandler, Injectable } from "@nestjs/common";
 import { Observable, tap } from "rxjs";
 
+@Injectable() // decorator necessário para injeção de dependência
 export class LoggerInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     
