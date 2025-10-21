@@ -1,17 +1,26 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class TasksService {
   constructor(private prisma: PrismaService) { }
 
 
-  async findAll() {
+  async findAll(paginationDto?: PaginationDto) {
     try {
-      const allTasks = await this.prisma.task.findMany();
+      const { limit = 10, offset = 0 } = paginationDto || {};
+
+      const allTasks = await this.prisma.task.findMany({
+        take: limit, //take -> limite de itens
+        skip: offset, //skip -> pular itens
+        orderBy: {
+          id: 'desc'
+        }
+      });
+
       return allTasks;
     } catch (err) {
       throw new HttpException("Erro ao buscar as tarefas!", HttpStatus.INTERNAL_SERVER_ERROR);
