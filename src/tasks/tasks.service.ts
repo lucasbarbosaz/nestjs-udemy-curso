@@ -53,7 +53,7 @@ export class TasksService {
     };
 
 
-    return "Tarefa atualizada com sucesso!";
+    return this.tasks[taskIndex];
   }
 
   delete(id: string) {
