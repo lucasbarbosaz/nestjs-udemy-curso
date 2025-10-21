@@ -13,7 +13,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, // se TRUE, remove propriedades não definidas no DTO
-    transform: true, // transforma os tipos primitivos automaticamente
   }))
   await app.listen(process.env.PORT ?? 3000);
 }
