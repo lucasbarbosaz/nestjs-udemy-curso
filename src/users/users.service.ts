@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -57,8 +58,47 @@ export class UsersService {
     }
   }
 
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: { id }
+      })
+
+      if (!user) {
+        throw new HttpException("Esse usuário não existe!", HttpStatus.NOT_FOUND);
+      }
+
+      const updateUser = await this.prisma.user.update({
+        where: { id },
+        data: {
+          name: updateUserDto.name ? updateUserDto.name : user.name,
+          passwordHash: updateUserDto.password ? updateUserDto.password : user.passwordHash,
+        },
+        select: { //select só retorna os campos desejados
+          id: true,
+          email: true,
+          name: true
+        }
+      })
+
+      return updateUser
+    } catch (err) {
+      throw new HttpException("Erro ao atualizar o usuário!", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async delete(id: number) {
     try {
+
+      const user = this.prisma.user.findFirst({
+        where: { id }
+      })
+
+      if (!user) {
+        throw new HttpException("Esse usuário não existe!", HttpStatus.NOT_FOUND);
+      }
+
       await this.prisma.user.delete({
         where: { id }
       })

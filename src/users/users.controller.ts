@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly userService: UsersService) { }
 
   @Get()
   findAllUsers(@Query() paginationDto?: PaginationDto) {
@@ -18,12 +19,19 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
+
+  @Patch(":id")
+  updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
+  }
+
+
   @Delete(":id")
-  delete(@Param('id', ParseIntPipe) id: number) {
+  deleteUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.delete(id);
   }
 }
