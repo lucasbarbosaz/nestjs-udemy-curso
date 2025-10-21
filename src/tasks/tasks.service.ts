@@ -18,7 +18,7 @@ export class TasksService {
   }
 
   findOne(id: string) {
-    return this.tasks.find( task => task.id === Number(id) ) // verificando se o id da task é igual ao id passado como parâmetro
+    return this.tasks.find(task => task.id === Number(id)) // verificando se o id da task é igual ao id passado como parâmetro
   }
 
   create(body: any) {
@@ -31,5 +31,30 @@ export class TasksService {
     this.tasks.push(newTask);
 
     return newTask;
+  }
+
+  update(id: string, body: any) {
+    const taskIndex = this.tasks.findIndex(task => task.id === Number(id));
+
+    if (taskIndex >= 0) {
+      const taskItem = this.tasks[taskIndex];
+
+      this.tasks[taskIndex] = {
+        ...taskItem,
+        ...body
+      };
+    }
+
+     return "Tarefa atualizada com sucesso!";
+  }
+
+  delete(id: string) {
+    const taskIndex = this.tasks.findIndex(task => task.id === Number(id));
+
+    if (taskIndex >= 0) {
+      this.tasks.splice(taskIndex, 1);
+    } 
+
+    return `Tarefa de id ${id} deletada com sucesso!`;
   }
 }

@@ -23,14 +23,11 @@ export class TasksController {
 
   @Patch(":id")
   updateTask(@Param("id") id: string, @Body() body: any) {
-    console.log("ID: ", id);
-    console.log("Body: ", body);
-    return `Tarefa de id ${id} atualizada com sucesso!`;
+    return this.tasksService.update(id, body);
   }
 
   @Delete(":id")
   deleteTask(@Param("id") id: string) {
-    console.log("ID: ", id);
-    return `Tarefa de id ${id} deletada com sucesso!`;
+    return this.tasksService.delete(id);
   }
 }
