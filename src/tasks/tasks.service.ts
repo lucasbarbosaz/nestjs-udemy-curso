@@ -11,4 +11,8 @@ export class TasksService {
   findOne(id: string) {
     return "Buscando a tarefa de id " + id;
   }
+
+  create(body: any) {
+    return body;
+  }
 }
