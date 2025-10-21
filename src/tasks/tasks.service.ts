@@ -66,6 +66,8 @@ export class TasksService {
     this.tasks.splice(taskIndex, 1);
 
 
-    return `Tarefa de id ${id} deletada com sucesso!`;
+    return {
+      message: "Tarefa deletada com sucesso!"
+    }
   }
 }
