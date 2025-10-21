@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator";
 
 /**
  * DTO -> Data Transfer Object (Objeto de Transferência de Dados)
@@ -15,4 +15,8 @@ export class CreateTaskDto {
   @MaxLength(200, { message: "A descrição deve ter no máximo 10 caracteres!" })
   @IsNotEmpty({ message: "A descrição da tarefa é obrigatória!" })
   readonly description: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  readonly userId: number;
 }

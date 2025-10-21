@@ -28,7 +28,17 @@ export class UsersService {
       select: { //select só retorna os campos desejados
         id: true,
         email: true,
-        name: true
+        name: true,
+        Tasks: true
+/* também posso usar o select da tabela relacionada para retornas apenas alguns campos relacionados
+        Tasks: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          }
+        }
+*/
       }
     })
 

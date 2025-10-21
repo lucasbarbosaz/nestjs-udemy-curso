@@ -49,12 +49,14 @@ export class TasksService {
         data: {
           name: createTaskDto.name,
           description: createTaskDto.description,
-          completed: false
+          completed: false,
+          userId: createTaskDto.userId
         }
       })
 
       return newTask;
     } catch (err) {
+      console.log(err);
       throw new HttpException("Erro ao criar a tarefa!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -71,7 +73,11 @@ export class TasksService {
 
       const task = await this.prisma.task.update({
         where: { id },
-        data: updateTaskDto
+        data: {
+          name: updateTaskDto?.name ? updateTaskDto?.name : findTask.name,
+          description: updateTaskDto?.description ? updateTaskDto?.description : findTask.description,
+          completed: updateTaskDto?.completed ? updateTaskDto?.completed : findTask.completed,
+        }
       })
 
       return task;
