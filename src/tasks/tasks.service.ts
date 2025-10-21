@@ -2,9 +2,12 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TasksService {
+  constructor(private prisma: PrismaService) {}
+  
 
   private tasks: Task[] = [
     {
@@ -15,14 +18,17 @@ export class TasksService {
     }
   ]
 
-  findAll() {
-    return this.tasks;
+  async findAll() {
+    const allTasks = await this.prisma.task.findMany();
+    return allTasks;
   }
 
-  findOne(id: number) {
-    const task = this.tasks.find(task => task.id === id) // verificando se o id da task é igual ao id passado como parâmetro
+  async findOne(id: number) {
+    const task = await this.prisma.task.findFirst({
+      where: { id }
+    })
 
-    if (task) return task;
+    if (task?.id) return task;
 
     throw new HttpException("Essa tarefa não existe!", HttpStatus.NOT_FOUND);
     //throw new NotFoundException("Essa tarefa não existe!");
