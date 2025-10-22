@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { HashingServiceProtocol } from 'src/auth/hash/hashing.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private readonly hashingService: HashingServiceProtocol
+  ) { }
 
   async findAll(paginationDto?: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDto || {};
@@ -49,11 +53,14 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
+
+      const passwordHash = await this.hashingService.hash(createUserDto.password);
+
       const user = await this.prisma.user.create({
         data: {
           email: createUserDto.email,
           name: createUserDto.name,
-          passwordHash: createUserDto.password
+          passwordHash: passwordHash
         },
         select: { //select só retorna os campos desejados
           id: true,
@@ -79,11 +86,20 @@ export class UsersService {
         throw new HttpException("Esse usuário não existe!", HttpStatus.NOT_FOUND);
       }
 
+      const dataUser: { name?: string, passwordHash?: string } = {
+        name: updateUserDto.name  ? updateUserDto.name : user.name
+      }
+
+      if (updateUserDto?.password) {
+        const passwordHash = await this.hashingService.hash(updateUserDto?.password);
+        dataUser['passwordHash'] = passwordHash;
+      }
+
       const updateUser = await this.prisma.user.update({
         where: { id },
         data: {
-          name: updateUserDto.name ? updateUserDto.name : user.name,
-          passwordHash: updateUserDto.password ? updateUserDto.password : user.passwordHash,
+          name: dataUser?.name,
+          passwordHash: dataUser?.passwordHash ? dataUser?.passwordHash : user.passwordHash
         },
         select: { //select só retorna os campos desejados
           id: true,
