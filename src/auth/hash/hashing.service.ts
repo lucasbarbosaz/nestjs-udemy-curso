@@ -1,0 +1,7 @@
+// uma classe abstrata apenas para servir como um tipo de contrato
+
+export abstract class HashingServiceProtocol {
+  abstract hash(password: string): Promise<string>;
+
+  abstract compare(password: string, passwordHash: string): Promise<boolean>;
+}
