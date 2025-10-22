@@ -14,10 +14,7 @@ import { AddHeaderInterceptor } from 'src/common/interceptors/add-header.interce
 //@UseInterceptors(LoggerInterceptor) //isso serve para todas as rotas desse controller
 export class TasksController {
   constructor(
-    private readonly tasksService: TasksService,
-
-    @Inject('KEY_TOKEN')
-    private readonly keyToken: string
+    private readonly tasksService: TasksService
     //private readonly taskUtils: TasksUtils
   ) 
   { }
@@ -27,7 +24,6 @@ export class TasksController {
   @UseInterceptors(AddHeaderInterceptor) //isso serve apenas para essa rota
   findAllTasks(@Query() paginationDto: PaginationDto) {
     //console.log(this.taskUtils.splitString("Essa é uma frase de teste"));
-    console.log("KEY_TOKEN:", this.keyToken);
     return this.tasksService.findAll(paginationDto);
   }
 
