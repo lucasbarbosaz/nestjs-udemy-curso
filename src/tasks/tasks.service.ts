@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,7 +6,8 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class TasksService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService) { }
 
 
   async findAll(paginationDto?: PaginationDto) {
