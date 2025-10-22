@@ -6,13 +6,15 @@ import { AuthService } from './auth.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 
 @Global() // um módulo global pode ser usado na aplicação inteira sem precisar importar em cada módulo
 @Module({
   imports: [
     PrismaModule,
-    ConfigModule.forFeature(jwtConfig)
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   providers: [
     {
